@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image } from 'react-native';
+import { View } from 'react-native';
 import axios from 'axios';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -7,8 +7,8 @@ import { PLACES_API_KEY } from '@env';
 
 const apiKey = PLACES_API_KEY;
 
-const NearbyPlaces = () => {
-  const [places, setPlaces] = useState([]);
+const MapViewScreen = () => {
+  const [restaurants, setRestaurants] = useState([]);
   const [region, setRegion] = useState({
     latitude: 0,
     longitude: 0,
@@ -30,7 +30,7 @@ const NearbyPlaces = () => {
       const { latitude, longitude } = location.coords;
 
       // Calculate new region based on the search radius (1000 meters)
-      const searchRadiusMeters = 1000;
+      const searchRadiusMeters = 500;
       const degreesPerPixel = 110880; // Approximate value for latitude
       const radiusInDegrees = searchRadiusMeters / degreesPerPixel;
       const newRegion = {
@@ -45,53 +45,34 @@ const NearbyPlaces = () => {
       // Make an API request to fetch nearby places using the user's location
       axios
         .get(
-          `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1000&type=restaurant&key=${apiKey}&fields=name,place_id,photos`
+            `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=500&types=restaurant&key=${apiKey}&fields=name,place_id,photos`
         )
         .then((response) => {
-          setPlaces(response.data.results);
+          setRestaurants(response.data.results);
         })
         .catch((error) => {
-          console.error('Error fetching nearby places:', error);
+          console.error('Error fetching nearby restaurants:', error);
         });
+
     })();
   }, []); // Run this effect only once when the component mounts
 
   return (
     <View style={{ flex: 1 }}>
       <MapView style={{ flex: 1 }} region={region}>
-        {places.map((place) => (
+        {restaurants.map((restaurant) => (
           <Marker
-            key={place.place_id}
+            key={restaurant.place_id}
             coordinate={{
-              latitude: place.geometry.location.lat,
-              longitude: place.geometry.location.lng,
+              latitude: restaurant.geometry.location.lat,
+              longitude: restaurant.geometry.location.lng,
             }}
-            title={place.name}
+            title={restaurant.name}
           />
         ))}
       </MapView>
-      <View style={{ flex: 1 }}>
-      <FlatList
-        data={places}
-        keyExtractor={(item) => item.place_id}
-        renderItem={({ item }) => (
-          <View style={{ padding: 10 }}>
-            <Text>Name: {item.name}</Text>
-            <Text>Place ID: {item.place_id}</Text>
-            {item.photos && (
-              <Image
-                source={{
-                  uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference=${item.photos[0].photo_reference}&key=${apiKey}`,
-                }}
-                style={{ width: 200, height: 200 }}
-              />
-            )}
-          </View>
-        )}
-      />
-      </View>
     </View>
   );
 };
 
-export default NearbyPlaces;
+export default MapViewScreen;
