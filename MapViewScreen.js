@@ -9,6 +9,7 @@ const apiKey = PLACES_API_KEY;
 
 const MapViewScreen = () => {
   const [restaurants, setRestaurants] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
   const [region, setRegion] = useState({
     latitude: 0,
     longitude: 0,
@@ -29,6 +30,9 @@ const MapViewScreen = () => {
       const location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
 
+      // Set the user's location
+      setUserLocation({ latitude, longitude });
+
       // Calculate new region based on the search radius (1000 meters)
       const searchRadiusMeters = 500;
       const degreesPerPixel = 110880; // Approximate value for latitude
@@ -45,7 +49,7 @@ const MapViewScreen = () => {
       // Make an API request to fetch nearby places using the user's location
       axios
         .get(
-            `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=500&types=restaurant&key=${apiKey}&fields=name,place_id,photos`
+          `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=500&types=restaurant&key=${apiKey}&fields=name,place_id,photos`
         )
         .then((response) => {
           setRestaurants(response.data.results);
@@ -53,13 +57,22 @@ const MapViewScreen = () => {
         .catch((error) => {
           console.error('Error fetching nearby restaurants:', error);
         });
-
     })();
   }, []); // Run this effect only once when the component mounts
 
   return (
     <View style={{ flex: 1 }}>
       <MapView style={{ flex: 1 }} region={region}>
+        {userLocation && (
+          <Marker
+            coordinate={{
+              latitude: userLocation.latitude,
+              longitude: userLocation.longitude,
+            }}
+            title="Your Location"
+            pinColor="blue" // You can customize the marker color
+          />
+        )}
         {restaurants.map((restaurant) => (
           <Marker
             key={restaurant.place_id}
