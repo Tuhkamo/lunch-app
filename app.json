@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "lunch-app",
+    "slug": "lunch-app",
+    "version": "1.0.0",
+    "sdkVersion": "49.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "android": {
+      "package": "com.anonymous.lunchapp"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "01381793-d20d-469f-8ce0-f1e78443fb6d"
+      }
+    },
+    "owner": "tukamo"
+  }
+}

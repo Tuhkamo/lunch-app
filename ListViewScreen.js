@@ -1,17 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image } from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
 import axios from 'axios';
 import * as Location from 'expo-location';
 import { PLACES_API_KEY } from '@env';
 
 const apiKey = PLACES_API_KEY;
 
+const PlaceItem = ({ name, placeId, photos }) => (
+  <View style={styles.placeItem}>
+    <Text style={styles.placeName}>Name: {name}</Text>
+    <Text style={styles.placeId}>Place ID: {placeId}</Text>
+    {photos && (
+      <Image
+        source={{
+          uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference=${photos[0].photo_reference}&key=${apiKey}`,
+        }}
+        style={styles.placeImage}
+      />
+    )}
+  </View>
+);
+
 const ListViewScreen = () => {
   const [places, setPlaces] = useState([]);
-  
 
   useEffect(() => {
-    // Request permission to access the user's location
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -19,11 +32,9 @@ const ListViewScreen = () => {
         return;
       }
 
-      // Get the user's location
       const location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
 
-      // Make an API request to fetch nearby places using the user's location
       axios
         .get(
           `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=500&types=restaurant&key=${apiKey}&fields=name,place_id,photos`
@@ -35,30 +46,42 @@ const ListViewScreen = () => {
           console.error('Error fetching nearby places:', error);
         });
     })();
-  }, []); // Run this effect only once when the component mounts
+  }, []);
 
   return (
-      <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <FlatList
         data={places}
         keyExtractor={(item) => item.place_id}
         renderItem={({ item }) => (
-          <View style={{ padding: 10 }}>
-            <Text>Name: {item.name}</Text>
-            <Text>Place ID: {item.place_id}</Text>
-            {item.photos && (
-              <Image
-                source={{
-                  uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference=${item.photos[0].photo_reference}&key=${apiKey}`,
-                }}
-                style={{ width: 200, height: 200 }}
-              />
-            )}
-          </View>
+          <PlaceItem name={item.name} placeId={item.place_id} photos={item.photos} />
         )}
       />
-      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  placeItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  placeName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  placeId: {
+    color: '#777',
+  },
+  placeImage: {
+    width: "auto",
+    height: 200,
+    marginTop: 10,
+  },
+});
 
 export default ListViewScreen;
