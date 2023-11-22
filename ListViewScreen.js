@@ -37,7 +37,7 @@ const ListViewScreen = () => {
 
       axios
         .get(
-          `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=500&types=restaurant&key=${apiKey}&fields=name,place_id,photos`
+          `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1000&types=restaurant&key=${apiKey}&fields=name,place_id,photos`
         )
         .then((response) => {
           setPlaces(response.data.results);

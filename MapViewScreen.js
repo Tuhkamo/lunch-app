@@ -33,7 +33,7 @@ const MapViewScreen = () => {
 
       setUserLocation({ latitude, longitude });
 
-      const searchRadiusMeters = 500;
+      const searchRadiusMeters = 1000;
       const degreesPerPixel = 110880;
       const radiusInDegrees = searchRadiusMeters / degreesPerPixel;
       const newRegion = {
@@ -46,7 +46,7 @@ const MapViewScreen = () => {
       setRegion(newRegion);
 
       const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=500&types=restaurant&key=${apiKey}&fields=name,place_id,photos`
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1000&types=restaurant&key=${apiKey}&fields=name,place_id,photos`
       );
 
       setRestaurants(response.data.results);
