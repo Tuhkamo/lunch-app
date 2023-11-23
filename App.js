@@ -1,9 +1,12 @@
+// App.js
+
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MapViewScreen from './MapViewScreen';
-import ListViewScreen from './ListViewScreen';
-import FavoriteScreen from './FavoriteScreen';
+import MapScreen from './src/MapScreen';
+import RestaurantListScreen from './src/RestaurantListScreen';
+import FavoriteScreen from './src/FavoriteScreen';
+import BakeryListScreen from './src/BakeryListScreen';
 import { Ionicons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
@@ -14,7 +17,7 @@ export default function App() {
       <Tab.Navigator>
         <Tab.Screen
           name="Map"
-          component={MapViewScreen}
+          component={MapScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="map" size={size} color={color} />
@@ -22,18 +25,27 @@ export default function App() {
           }}
         />
         <Tab.Screen
-          name="List"
-          component={ListViewScreen}
+          name="Restaurants"
+          component={RestaurantListScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="list" size={size} color={color} />
+              <Ionicons name="restaurant" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Bakeries"
+          component={BakeryListScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="flame" size={size} color={color} />
             ),
           }}
         />
         <Tab.Screen
           name="Favorites"
           component={FavoriteScreen}
-          initialParams={{ navigateFromApp: true }} // Pass initial parameters
+         // initialParams={{ navigateFromApp: true }} // Pass initial parameters
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="star" size={size} color={color} />
