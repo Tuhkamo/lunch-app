@@ -21,7 +21,7 @@ An app that helps users discover nearby restaurants and bakeries, ideal for look
 
 1. Clone the repository.
 2. Install dependencies: `npm install`.
-3. Start the Expo development server: `expo start`.
+3. Start the Expo development server: `npx expo`.
 
 ## Usage
 
