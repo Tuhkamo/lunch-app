@@ -37,7 +37,7 @@ const MapScreen = () => {
 
       // Used for setting initial MapView values
       const searchRadiusMeters = 1000;
-      const degreesPerPixel = 110880;
+      const degreesPerPixel = 110880; // 1 degree of latitude and longitude is 111 km or 110 880 meters
       const radiusInDegrees = searchRadiusMeters / degreesPerPixel;
       const newRegion = {
         latitude,
