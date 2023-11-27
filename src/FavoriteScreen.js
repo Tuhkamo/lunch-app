@@ -5,12 +5,11 @@ import { View, Text, FlatList, Image, Button, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PLACES_API_KEY } from '@env';
 
-// Extract API key from environment variables
 const apiKey = PLACES_API_KEY;
 
-// Define the FavoriteScreen component
+// FavoriteScreen component used for display of favourite establishements
+// These establishments can be viewed even outside of the 1000 meter radius and deleted
 const FavoriteScreen = ({ navigation }) => {
-  // State to store the list of favorite places
   const [favoritePlaces, setFavoritePlaces] = useState([]);
 
   // Function to fetch and parse favorite places from AsyncStorage
@@ -29,7 +28,7 @@ const FavoriteScreen = ({ navigation }) => {
     const unsubscribe = navigation.addListener('focus', () => {
       fetchFavorites();
     });
-    return unsubscribe; // Cleanup the subscription when the component unmounts
+    return unsubscribe;
   }, [navigation]);
 
   // Function to remove a place from favorites

@@ -7,9 +7,13 @@ import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { fetchNearbyPlaces } from '../utils/api';
 
+/* 
+  MapScreen component displays a map of nearby bakeries and restaurants in a 1000 meter radius.
+  These establishments can be saved to Favourites to be displayed in a different view.
+  savedPlaces are saved to AsyncStorage for future use.
+*/
 const MapScreen = () => {
 
-  // State variables for places, user location, region, selected place, and saved places
   const [places, setPlaces] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [region, setRegion] = useState({
@@ -50,7 +54,6 @@ const MapScreen = () => {
       // Gets nearby restaurants and bakeries and combines them into places
       const restaurantPlaces = await fetchNearbyPlaces('restaurant');
       const bakeryPlaces = await fetchNearbyPlaces('bakery');
-
       setPlaces([...restaurantPlaces, ...bakeryPlaces]);
 
     } catch (error) {

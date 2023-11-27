@@ -8,8 +8,11 @@ import { fetchNearbyPlaces } from '../utils/api';
 
 const apiKey = PLACES_API_KEY;
 
+/*
+  Template ListScreen to be used in displaying information about nearby API-results (bakeries, restaurants).
+  Easy to expand if needed for other types of establishements.
+*/
 const PlaceListScreen = ({ placeType }) => {
-  // State variables for places, sort criteria, and images
   const [places, setPlaces] = useState([]);
   const [sortCriteria, setSortCriteria] = useState('rating');
 
